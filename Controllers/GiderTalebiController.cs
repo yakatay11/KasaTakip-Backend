@@ -58,8 +58,15 @@ namespace KasaAPI.Controllers
                 BagliTalepId = talep.Id
             };
 
+            _context.Giderler.Add(yeniGider);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mesaj = "Talep onaylandı ve kasaya gider olarak işlendi.", giderId = yeniGider.Id });
+        }
+
+        // PUT: api/GiderTalebi/5
         [HttpPut("{id}")]
-        async Task<IActionResult> TalepGuncelle(int id, GiderTalebi guncelTalep)
+        public async Task<IActionResult> TalepGuncelle(int id, GiderTalebi guncelTalep)
         {
             var talep = await _context.GiderTalepleri.FindAsync(id);
             if (talep == null) return NotFound(new { message = "Güncellenecek talep bulunamadı." });
@@ -71,11 +78,6 @@ namespace KasaAPI.Controllers
 
             await _context.SaveChangesAsync();
             return Ok(new { message = "Talep başarıyla güncellendi." });
-        }
-            _context.Giderler.Add(yeniGider);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { mesaj = "Talep onaylandı ve kasaya gider olarak işlendi.", giderId = yeniGider.Id });
         }
     }
 }
