@@ -59,7 +59,7 @@ namespace KasaAPI.Controllers
             };
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> TalepGuncelle(int id, GiderTalebi guncelTalep)
+        async Task<IActionResult> TalepGuncelle(int id, GiderTalebi guncelTalep)
         {
             var talep = await _context.GiderTalepleri.FindAsync(id);
             if (talep == null) return NotFound(new { message = "Güncellenecek talep bulunamadı." });
