@@ -22,7 +22,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+// CORS politikasını ekle
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -33,7 +43,8 @@ if (app.Environment.IsDevelopment())
 
 // ÇOK ÖNEMLİ: CORS middleware'i diğer yönlendirmelerden ve controller'lardan ÖNCE gelmelidir!
 app.UseCors("AllowReactApp");
-
+// CORS middleware'ini aktif et (app.MapControllers veya app.UseRouting'den önce olmalı)
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();
