@@ -148,3 +148,4 @@ C:\Users\user\KasaTakipSistemi\KasaAPI\obj\Debug\net10.0\refint\KasaAPI.dll
 C:\Users\user\KasaTakipSistemi\KasaAPI\obj\Debug\net10.0\KasaAPI.pdb
 C:\Users\user\KasaTakipSistemi\KasaAPI\obj\Debug\net10.0\KasaAPI.genruntimeconfig.cache
 C:\Users\user\KasaTakipSistemi\KasaAPI\obj\Debug\net10.0\ref\KasaAPI.dll
+C:\Users\user\KasaTakipSistemi\KasaAPI\obj\Debug\net10.0\KasaAPI.sourcelink.json

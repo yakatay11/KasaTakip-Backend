@@ -31,16 +31,20 @@ namespace KasaAPI.Controllers
             return CreatedAtAction(nameof(GetGiderler), new { id = gider.Id }, gider);
         }
 
-       [HttpPut("{id}")]
-        public async Task<IActionResult> GiderGuncelle(int id, Gider guncelGider)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> GiderGuncelle(int id, Gider guncelGider, [FromQuery] string rol)
         {
+            if (rol != "Yonetici")
+            {
+                return Unauthorized(new { message = "Bu işlem için yönetici yetkisi gerekiyor." });
+            }
+
             var gider = await _context.Giderler.FindAsync(id);
             if (gider == null)
             {
                 return NotFound(new { message = "Güncellenecek gider bulunamadı." });
             }
 
-            // KimeOdenecek yerine Gider modelindeki doğru alan olan KimeOdendi kullanılıyor
             gider.KimeOdendi = guncelGider.KimeOdendi; 
             gider.Kategori = guncelGider.Kategori;
             gider.Tutar = guncelGider.Tutar;
@@ -52,8 +56,13 @@ namespace KasaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> GiderSil(int id)
+        public async Task<IActionResult> GiderSil(int id, [FromQuery] string rol)
         {
+            if (rol != "Yonetici")
+            {
+                return Unauthorized(new { message = "Bu işlem için yönetici yetkisi gerekiyor." });
+            }
+
             var gider = await _context.Giderler.FindAsync(id);
             if (gider == null)
             {

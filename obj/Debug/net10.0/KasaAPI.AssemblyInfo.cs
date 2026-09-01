@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KasaAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c6aabee338f16d2ab4d38599f77618dfe8b0f16")]
 [assembly: System.Reflection.AssemblyProductAttribute("KasaAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KasaAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
