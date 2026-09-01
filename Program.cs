@@ -4,25 +4,14 @@ using KasaAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS Servis Kaydı
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
-
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// CORS politikasını ekle
+
+// Tek ve kapsamlı CORS politikası (Vercel ve localhost'u tamamen destekler)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -33,6 +22,7 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -41,13 +31,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// ÇOK ÖNEMLİ: CORS middleware'i diğer yönlendirmelerden ve controller'lardan ÖNCE gelmelidir!
-app.UseCors("AllowReactApp");
-// CORS middleware'ini aktif et (app.MapControllers veya app.UseRouting'den önce olmalı)
+// CORS middleware'i yönlendirmelerden ÖNCE gelmelidir
 app.UseCors("AllowAll");
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 // Uygulama ilk çalıştığında örnek admin kullanıcı oluşturur (Eğer yoksa)
 using (var scope = app.Services.CreateScope())
 {
@@ -67,4 +57,5 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
     }
 }
+
 app.Run();
