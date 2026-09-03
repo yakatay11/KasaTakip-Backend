@@ -34,7 +34,7 @@ namespace KasaAPI.Controllers
             return CreatedAtAction(nameof(GetGiderTalepleri), new { id = giderTalebi.Id }, giderTalebi);
         }
 
-        // PUT: api/GiderTalebi/5/onayla (Admin talebi onaylar ve kasaya gider olarak işler)
+        // PUT: api/GiderTalebi/5/onayla (Admin/Muhasebe talebi onaylar ve kasaya gider olarak işler)
         [HttpPut("{id}/onayla")]
         public async Task<IActionResult> TalepOnayla(int id)
         {
@@ -46,7 +46,6 @@ namespace KasaAPI.Controllers
 
             talep.Durum = "Onaylandı";
 
-            // Talep onaylandığı an otomatik olarak ana Gider tablosuna eklenir
             var yeniGider = new Gider
             {
                 Tarih = talep.Tarih,
@@ -54,7 +53,7 @@ namespace KasaAPI.Controllers
                 Kategori = talep.Kategori,
                 Tutar = talep.Tutar,
                 Aciklama = talep.Aciklama,
-                IslemiYapanAdminId = 1, // Şimdilik varsayılan admin ID
+                IslemiYapanAdminId = 1, 
                 BagliTalepId = talep.Id
             };
 
@@ -62,6 +61,22 @@ namespace KasaAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { mesaj = "Talep onaylandı ve kasaya gider olarak işlendi.", giderId = yeniGider.Id });
+        }
+
+        // PUT: api/GiderTalebi/5/reddet (Admin/Muhasebe talebi reddeder)
+        [HttpPut("{id}/reddet")]
+        public async Task<IActionResult> TalepReddet(int id)
+        {
+            var talep = await _context.GiderTalepleri.FindAsync(id);
+            if (talep == null)
+            {
+                return NotFound(new { message = "Talep bulunamadı." });
+            }
+
+            talep.Durum = "Reddedildi";
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Talep reddedildi." });
         }
 
         // PUT: api/GiderTalebi/5
