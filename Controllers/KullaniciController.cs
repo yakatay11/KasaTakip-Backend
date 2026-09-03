@@ -33,7 +33,7 @@ namespace KasaAPI.Controllers
             return CreatedAtAction(nameof(GetKullanicilar), new { id = kullanici.Id }, kullanici);
         }
 
-        // POST: api/Kullanici/giris (Kullanıcı giriş kontrolü)
+        // POST: api/Kullanici/giris
         [HttpPost("giris")]
         public async Task<IActionResult> GirisYap([FromBody] Kullanici girisModel)
         {
@@ -46,6 +46,67 @@ namespace KasaAPI.Controllers
             }
 
             return Ok(new { message = "Giriş başarılı", rol = k.Rol, adSoyad = k.AdSoyad, id = k.Id });
+        }
+
+        // PUT: api/Kullanici/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutKullanici(int id, Kullanici kullanici)
+        {
+            if (id != kullanici.Id)
+            {
+                return BadRequest(new { message = "ID uyuşmazlığı." });
+            }
+
+            var mevcutKullanici = await _context.Kullanicilar.FindAsync(id);
+            if (mevcutKullanici == null)
+            {
+                return NotFound(new { message = "Kullanıcı bulunamadı." });
+            }
+
+            mevcutKullanici.AdSoyad = kullanici.AdSoyad;
+            mevcutKullanici.KullaniciAdi = kullanici.KullaniciAdi;
+            mevcutKullanici.Rol = kullanici.Rol;
+
+            if (!string.IsNullOrEmpty(kullanici.Sifre))
+            {
+                mevcutKullanici.Sifre = kullanici.Sifre;
+            }
+
+            _context.Entry(mevcutKullanici).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Kullanicilar.Any(e => e.Id == id))
+                {
+                    return NotFound(new { message = "Kullanıcı bulunamadı." });
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Kullanici/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteKullanici(int id)
+        {
+            var kullanici = await _context.Kullanicilar.FindAsync(id);
+            if (kullanici == null)
+            {
+                return NotFound(new { message = "Kullanıcı bulunamadı." });
+            }
+
+            _context.Kullanicilar.Remove(kullanici);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
